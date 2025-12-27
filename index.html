@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Análise Inteligente de Terrenos com IA - KW Frema. Descubra o potencial construtivo do seu terreno em segundos.">
+    <meta name="keywords" content="análise terrenos, zoneamento, viabilidade urbana, KW Frema, São Paulo">
+    <meta name="author" content="Jonas Federighi - KW Frema">
+    <title>Análise de Terrenos - KW Frema</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --kw-red: #C8102E;
+            --kw-dark-red: #8B0000;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --text-light: #999999;
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --border-color: #e0e0e0;
+            --success: #4caf50;
+            --warning: #ff9800;
+            --error: #f44336;
+            --info: #2196f3;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: var(--text-primary);
+            line-height: 1.6;
+            background: var(--bg-white);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--kw-red) 0%, var(--kw-dark-red) 100%);
+            color: white;
+            padding: 80px 0 60px;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .kw-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .kw-red {
+            background: white;
+            color: var(--kw-red);
+            font-size: 48px;
+            font-weight: 900;
+            padding: 12px 20px;
+            border-radius: 8px;
+            letter-spacing: 2px;
+            font-family: Arial Black, sans-serif;
+        }
+
+        .frema-name {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .tagline {
+            font-size: 14px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .hero-title {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            font-weight: 400;
+        }
+
+        .hero-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            opacity: 0.95;
+        }
+
+        .feature-icon {
+            font-size: 18px;
+        }
+
+        /* Form Section */
+        .form-section {
+            padding: 60px 0;
+            background: var(--bg-light);
+        }
+
+        .form-wrapper {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .form-header h2 {
+            font-size: 28px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        .terreno-form {
+            display: block;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .label-icon {
+            font-size: 16px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--kw-red);
+            box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.1);
+        }
+
+        .helper-text {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, var(--kw-red) 0%, var(--kw-dark-red) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(200, 16, 46, 0.3);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-icon {
+            font-size: 18px;
+        }
+
+        /* Loading State */
+        .loading-state {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--kw-red);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        .loading-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: 350px;
+            margin: 0 auto;
+        }
+
+        .loading-step {
+            font-size: 14px;
+            color: var(--text-secondary);
+            padding: 8px;
+            background: var(--bg-light);
+            border-radius: 6px;
+        }
+
+        /* Results Section */
+        .results-section {
+            display: none;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .results-header h3 {
+            font-size: 24px;
+            color: var(--text-primary);
+        }
+
+        .btn-new-analysis {
+            padding: 10px 20px;
+            background: white;
+            color: var(--kw-red);
+            border: 2px solid var(--kw-red);
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-new-analysis:hover {
+            background: var(--kw-red);
+            color: white;
+        }
+
+        .result-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 4px solid var(--warning);
+        }
+
+        .badge-success {
+            background: #d1ecf1;
+            color: #0c5460;
+            border-left: 4px solid var(--info);
+        }
+
+        .result-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .result-card {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .result-card:hover {
+            border-color: var(--kw-red);
+            transform: translateY(-2px);
+        }
+
+        .card-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .card-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-light);
+            margin-bottom: 6px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .card-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .highlight-card {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+            border: 2px solid var(--kw-red);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .highlight-icon {
+            font-size: 48px;
+        }
+
+        .highlight-content {
+            flex: 1;
+        }
+
+        .highlight-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .highlight-value {
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--kw-red);
+            margin-bottom: 4px;
+        }
+
+        .highlight-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            padding: 15px 18px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid var(--text-light);
+        }
+
+        .info-box-blue {
+            background: #e3f2fd;
+            border-left-color: var(--info);
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 2px solid var(--warning);
+            border-radius: 8px;
+            padding: 15px 18px;
+            margin: 20px 0;
+        }
+
+        .error-box {
+            background: #ffebee;
+            border: 2px solid var(--error);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, var(--kw-red) 0%, var(--kw-dark-red) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .cta-box h4 {
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .cta-box p {
+            font-size: 15px;
+            opacity: 0.95;
+            margin-bottom: 20px;
+        }
+
+        .btn-cta {
+            display: inline-block;
+            padding: 12px 30px;
+            background: white;
+            color: var(--kw-red);
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Trust Section */
+        .trust-section {
+            padding: 60px 0;
+            background: white;
+        }
+
+        .trust-content {
+            text-align: center;
+        }
+
+        .trust-content h3 {
+            font-size: 32px;
+            margin-bottom: 40px;
+            color: var(--text-primary);
+        }
+
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .trust-item {
+            text-align: center;
+        }
+
+        .trust-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .trust-item h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .trust-item p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .page-footer {
+            background: var(--text-primary);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .page-footer p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .footer-small {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        /* Demo Banner */
+        .demo-banner {
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .demo-banner a {
+            color: white;
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 60px 0 40px;
+            }
+
+            .kw-red,
+            .frema-name {
+                font-size: 36px;
+            }
+
+            .hero-title {
+                font-size: 32px;
+            }
+
+            .hero-subtitle {
+                font-size: 18px;
+            }
+
+            .hero-features {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .form-wrapper {
+                padding: 25px;
+            }
+
+            .result-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .highlight-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .highlight-value {
+                font-size: 28px;
+            }
+
+            .results-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .btn-new-analysis {
+                width: 100%;
+            }
+
+            .trust-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .kw-logo {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .kw-red,
+            .frema-name {
+                font-size: 28px;
+            }
+
+            .hero-title {
+                font-size: 26px;
+            }
+
+            .result-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo Banner -->
+    <div class="demo-banner">
+        🚀 Versão Demo - Em breve disponível em <a href="https://jonas-federighi.kw.com" target="_blank">jonas-federighi.kw.com</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="kw-logo">
+                    <div class="kw-red">KW</div>
+                    <div class="frema-name">FREMA</div>
+                </div>
+                <p class="tagline">Keller Williams Realty</p>
+                
+                <h1 class="hero-title">Análise Inteligente de Terrenos</h1>
+                <p class="hero-subtitle">
+                    Descubra o potencial construtivo do seu terreno em menos de 30 segundos
+                </p>
+                
+                <div class="hero-features">
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Zoneamento Atualizado</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Coeficientes de Aproveitamento</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Potencial Construtivo</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-icon">✓</span>
+                        <span>Casos Similares</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Form Section -->
+    <section class="form-section">
+        <div class="container">
+            <div class="form-wrapper">
+                <div class="form-header">
+                    <h2>Analisar Terreno</h2>
+                    <p>Preencha os dados abaixo para receber uma análise completa</p>
+                </div>
+                
+                <form id="terrenoForm" class="terreno-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="sql">
+                                <span class="label-icon">📋</span>
+                                SQL do Lote *
+                            </label>
+                            <input 
+                                type="text" 
+                                id="sql" 
+                                name="sql" 
+                                placeholder="001.002.0003-4"
+                                required
+                                autocomplete="off"
+                            >
+                            <span class="helper-text">Formato: XXX.XXX.XXXX-X ou números apenas</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="endereco">
+                                <span class="label-icon">📍</span>
+                                Endereço Completo
+                            </label>
+                            <input 
+                                type="text" 
+                                id="endereco" 
+                                name="endereco" 
+                                placeholder="Rua Augusta, 2000 - Consolação, São Paulo - SP"
+                                autocomplete="off"
+                            >
+                            <span class="helper-text">Rua, número, bairro, cidade, estado</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="area_terreno">
+                                <span class="label-icon">📏</span>
+                                Área do Terreno (m²)
+                            </label>
+                            <input 
+                                type="number" 
+                                id="area_terreno" 
+                                name="area_terreno" 
+                                placeholder="1200"
+                                step="0.01"
+                                min="0"
+                                autocomplete="off"
+                            >
+                            <span class="helper-text">Opcional - ajuda na análise de viabilidade</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit" id="submitBtn">
+                        <span class="btn-icon">🚀</span>
+                        <span class="btn-text">Analisar Terreno</span>
+                    </button>
+                </form>
+
+                <!-- Loading State -->
+                <div class="loading-state" id="loadingState">
+                    <div class="spinner"></div>
+                    <p class="loading-title">Analisando terreno...</p>
+                    <div class="loading-steps">
+                        <div class="loading-step">🔍 Buscando dados de zoneamento</div>
+                        <div class="loading-step">📊 Consultando casos similares</div>
+                        <div class="loading-step">💡 Calculando potencial construtivo</div>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div class="results-section" id="resultsSection">
+                    <div class="results-header">
+                        <h3 id="resultsTitle"></h3>
+                        <button class="btn-new-analysis" onclick="resetForm()">
+                            Nova Análise
+                        </button>
+                    </div>
+                    
+                    <div id="resultsContent"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust Section -->
+    <section class="trust-section">
+        <div class="container">
+            <div class="trust-content">
+                <h3>Por que confiar na KW Frema?</h3>
+                <div class="trust-grid">
+                    <div class="trust-item">
+                        <div class="trust-icon">🏆</div>
+                        <h4>Experiência Comprovada</h4>
+                        <p>Anos de atuação no mercado imobiliário de São Paulo</p>
+                    </div>
+                    <div class="trust-item">
+                        <div class="trust-icon">🤖</div>
+                        <h4>Tecnologia de Ponta</h4>
+                        <p>Inteligência Artificial treinada com milhares de casos reais</p>
+                    </div>
+                    <div class="trust-item">
+                        <div class="trust-icon">⚡</div>
+                        <h4>Resultados Instantâneos</h4>
+                        <p>Análise completa em menos de 30 segundos</p>
+                    </div>
+                    <div class="trust-item">
+                        <div class="trust-icon">🔒</div>
+                        <h4>Dados Seguros</h4>
+                        <p>Suas informações protegidas com criptografia de ponta</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+        <div class="container">
+            <p>Sistema desenvolvido por <strong>Jonas Federighi - KW Frema</strong></p>
+            <p class="footer-small">Análise de Viabilidade de Terrenos com Inteligência Artificial</p>
+            <p class="footer-small" style="margin-top: 15px;">
+                <a href="https://jonas-federighi.kw.com" target="_blank" style="color: white;">jonas-federighi.kw.com</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Configuração
+        const WEBHOOK_URL = 'https://hook.us2.make.com/e9bc6eubmmpajpsdzx37lks9e3yfk9ke';
+        const USE_FALLBACK = true;
+
+        // Elementos
+        const form = document.getElementById('terrenoForm');
+        const loadingState = document.getElementById('loadingState');
+        const resultsSection = document.getElementById('resultsSection');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Form Submit
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                sql: document.getElementById('sql').value.trim(),
+                endereco: document.getElementById('endereco').value.trim(),
+                area_terreno: parseFloat(document.getElementById('area_terreno').value) || null
+            };
+
+            if (!formData.area_terreno) {
+                delete formData.area_terreno;
+            }
+
+            // UI
+            submitBtn.disabled = true;
+            form.style.display = 'none';
+            loadingState.style.display = 'block';
+            resultsSection.style.display = 'none';
+
+            // Simular delay de 2 segundos
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData),
+                    mode: 'no-cors' // GitHub Pages CORS workaround
+                });
+
+                // No-cors mode não retorna dados, então sempre usa fallback
+                throw new Error('Using fallback for demo');
+
+            } catch (error) {
+                console.log('Demo mode - using mock data');
+
+                if (USE_FALLBACK) {
+                    const mockData = generateMockData(formData);
+                    mockData._fallback = true;
+                    displayResults(mockData, true);
+                } else {
+                    displayResults({
+                        error: error.message,
+                        message: 'Erro ao conectar com o servidor'
+                    }, false);
+                }
+            } finally {
+                loadingState.style.display = 'none';
+                resultsSection.style.display = 'block';
+            }
+        });
+
+        function generateMockData(input) {
+            const zonas = ['ZM-1', 'ZM-2', 'ZM-3', 'ZEU', 'ZEUP', 'ZC', 'ZER-1'];
+            const zona = zonas[Math.floor(Math.random() * zonas.length)];
+            const ca_maximo = zona.startsWith('ZM') ? 4.0 : zona.startsWith('ZEU') ? 2.5 : zona === 'ZC' ? 4.0 : 3.0;
+            const area = input.area_terreno || 1200;
+            const potencial = (area * ca_maximo).toFixed(2);
+
+            return {
+                status: "success",
+                fonte_dados: "mock_demo",
+                sql: input.sql,
+                endereco: input.endereco || "Endereço não informado",
+                dados_terreno: {
+                    zona: zona,
+                    ca_maximo: ca_maximo,
+                    to_maxima: 0.7,
+                    area_terreno: area,
+                    potencial_construtivo: potencial,
+                    uso_permitido: "Residencial, Comercial, Serviços",
+                    restricoes: "Consultar GeoSampa para validação oficial"
+                },
+                casos_similares: {
+                    total: Math.floor(Math.random() * 15) + 1
+                },
+                requer_validacao: true,
+                timestamp: new Date().toISOString()
+            };
+        }
+
+        function displayResults(data, success) {
+            const resultsTitle = document.getElementById('resultsTitle');
+            const resultsContent = document.getElementById('resultsContent');
+
+            if (success) {
+                resultsTitle.innerHTML = '✅ Análise Concluída!';
+                
+                let html = '';
+
+                // Badge
+                if (data.fonte_dados || data._fallback) {
+                    const isDemo = data.fonte_dados === 'mock_demo' || data._fallback;
+                    html += `
+                        <div class="result-badge ${isDemo ? 'badge-warning' : 'badge-success'}">
+                            ${isDemo ? '⚠️ Versão Demo - Dados Preliminares para Ilustração' : '✓ Dados Verificados do GeoSampa'}
+                        </div>
+                    `;
+                }
+
+                // Dados principais
+                if (data.dados_terreno) {
+                    html += `
+                        <div class="result-cards">
+                            <div class="result-card">
+                                <div class="card-icon">📍</div>
+                                <div class="card-label">SQL do Lote</div>
+                                <div class="card-value">${data.sql || 'N/A'}</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="card-icon">🏗️</div>
+                                <div class="card-label">Zoneamento</div>
+                                <div class="card-value">${data.dados_terreno.zona || 'N/A'}</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="card-icon">📐</div>
+                                <div class="card-label">CA Máximo</div>
+                                <div class="card-value">${data.dados_terreno.ca_maximo || 'N/A'}</div>
+                            </div>
+                            <div class="result-card">
+                                <div class="card-icon">📏</div>
+                                <div class="card-label">Área do Terreno</div>
+                                <div class="card-value">${(data.dados_terreno.area_terreno || 0).toLocaleString('pt-BR')} m²</div>
+                            </div>
+                        </div>
+                    `;
+
+                    // Potencial construtivo
+                    const potencial = data.dados_terreno.potencial_construtivo || 
+                                    (data.dados_terreno.area_terreno * data.dados_terreno.ca_maximo).toFixed(2);
+                    html += `
+                        <div class="highlight-card">
+                            <div class="highlight-icon">💡</div>
+                            <div class="highlight-content">
+                                <div class="highlight-label">Potencial Construtivo Estimado</div>
+                                <div class="highlight-value">${parseFloat(potencial).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})} m²</div>
+                                <div class="highlight-desc">Área construída máxima permitida</div>
+                            </div>
+                        </div>
+                    `;
+
+                    // Uso permitido
+                    if (data.dados_terreno.uso_permitido) {
+                        html += `
+                            <div class="info-box">
+                                <strong>✅ Uso Permitido:</strong> ${data.dados_terreno.uso_permitido}
+                            </div>
+                        `;
+                    }
+                }
+
+                // Casos similares
+                if (data.casos_similares && data.casos_similares.total > 0) {
+                    html += `
+                        <div class="info-box info-box-blue">
+                            <strong>📊 Casos Similares:</strong> ${data.casos_similares.total} terreno(s) encontrado(s) no banco de dados
+                        </div>
+                    `;
+                }
+
+                // Aviso
+                html += `
+                    <div class="warning-box">
+                        <strong>⚠️ Versão Demonstração:</strong> Esta é uma versão demo hospedada no GitHub Pages. Os dados são gerados para ilustração. A versão oficial com dados reais estará disponível em breve em jonas-federighi.kw.com
+                    </div>
+                `;
+
+                // CTA
+                html += `
+                    <div class="cta-box">
+                        <h4>Gostou do sistema?</h4>
+                        <p>Entre em contato para conhecer a versão completa com dados reais do GeoSampa</p>
+                        <a href="https://jonas-federighi.kw.com" target="_blank" class="btn-cta">Visitar Site Oficial</a>
+                    </div>
+                `;
+
+                resultsContent.innerHTML = html;
+
+            } else {
+                resultsTitle.innerHTML = '❌ Erro na Análise';
+                resultsContent.innerHTML = `
+                    <div class="error-box">
+                        <p><strong>Mensagem:</strong> ${data.error || data.message || 'Erro desconhecido'}</p>
+                        <p>Por favor, tente novamente.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function resetForm() {
+            form.reset();
+            form.style.display = 'block';
+            resultsSection.style.display = 'none';
+            submitBtn.disabled = false;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Auto-formatar SQL
+        document.getElementById('sql').addEventListener('blur', (e) => {
+            let sql = e.target.value.replace(/[^\d]/g, '');
+            if (sql.length === 11) {
+                sql = `${sql.substr(0,3)}.${sql.substr(3,3)}.${sql.substr(6,4)}-${sql.substr(10,1)}`;
+                e.target.value = sql;
+            }
+        });
+
+        // Analytics
+        console.log('%c🏢 KW Frema - Análise de Terrenos (Demo)', 'color: #C8102E; font-size: 16px; font-weight: bold;');
+        console.log('Versão GitHub Pages - Demo');
+        console.log('Desenvolvido por Jonas Federighi - KW Frema');
+    </script>
+</body>
+</html>
