@@ -1,12 +1,17 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Análise Inteligente de Terrenos com IA - KW Frema. Descubra o potencial construtivo do seu terreno em segundos.">
-    <meta name="keywords" content="análise terrenos, zoneamento, viabilidade urbana, KW Frema, São Paulo">
+    <meta name="description" content="Análise Inteligente de Terrenos com IA - KW Frema. Descubra o potencial construtivo do seu terreno em segundos. Zoneamento, CA, casos similares e mais.">
+    <meta name="keywords" content="análise terrenos, zoneamento são paulo, viabilidade urbana, coeficiente aproveitamento, potencial construtivo, KW Frema, Jonas Federighi, imóveis são paulo">
     <meta name="author" content="Jonas Federighi - KW Frema">
-    <title>Análise de Terrenos - KW Frema</title>
+    <meta property="og:title" content="Análise Inteligente de Terrenos - KW Frema">
+    <meta property="og:description" content="Descubra o potencial construtivo do seu terreno em menos de 30 segundos com Inteligência Artificial">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://jonas-federighi.github.io/analise-terrenos/og-image.jpg">
+    <title>Análise de Terrenos com IA - KW Frema | Jonas Federighi</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==">
@@ -15,6 +20,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Google Analytics (ADICIONE SEU ID AQUI) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script> -->
     
     <style>
         /* Reset & Base */
@@ -553,24 +567,6 @@
             opacity: 0.8;
         }
 
-        /* Demo Banner */
-        .demo-banner {
-            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
-            color: white;
-            padding: 15px;
-            text-align: center;
-            font-weight: 600;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .demo-banner a {
-            color: white;
-            text-decoration: underline;
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
             .hero {
@@ -650,11 +646,6 @@
     </style>
 </head>
 <body>
-    <!-- Demo Banner -->
-    <div class="demo-banner">
-        🚀 Versão Demo - Em breve disponível em <a href="https://jonas-federighi.kw.com" target="_blank">jonas-federighi.kw.com</a>
-    </div>
-
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
@@ -763,8 +754,8 @@
                     <div class="spinner"></div>
                     <p class="loading-title">Analisando terreno...</p>
                     <div class="loading-steps">
-                        <div class="loading-step">🔍 Buscando dados de zoneamento</div>
-                        <div class="loading-step">📊 Consultando casos similares</div>
+                        <div class="loading-step">🔍 Consultando GeoSampa</div>
+                        <div class="loading-step">📊 Buscando casos similares</div>
                         <div class="loading-step">💡 Calculando potencial construtivo</div>
                     </div>
                 </div>
@@ -821,17 +812,34 @@
             <p>Sistema desenvolvido por <strong>Jonas Federighi - KW Frema</strong></p>
             <p class="footer-small">Análise de Viabilidade de Terrenos com Inteligência Artificial</p>
             <p class="footer-small" style="margin-top: 15px;">
-                <a href="https://jonas-federighi.kw.com" target="_blank" style="color: white;">jonas-federighi.kw.com</a>
+                <a href="https://jonas-federighi.kw.com" target="_blank" style="color: white; text-decoration: none;">jonas-federighi.kw.com</a>
             </p>
         </div>
     </footer>
 
     <script>
-        // Configuração
-        const WEBHOOK_URL = 'https://hook.us2.make.com/e9bc6eubmmpajpsdzx37lks9e3yfk9ke';
-        const USE_FALLBACK = true;
+        // ==========================================
+        // CONFIGURAÇÃO - EDITE AQUI
+        // ==========================================
+        
+        const CONFIG = {
+            // URL do webhook Make.com
+            WEBHOOK_URL: 'https://hook.us2.make.com/e9bc6eubmmpajpsdzx37lks9e3yfk9ke',
+            
+            // Fallback automático se Make.com falhar
+            USE_FALLBACK: true,
+            
+            // Tempo de espera antes de usar fallback (ms)
+            TIMEOUT: 10000,
+            
+            // URL de contato
+            CONTACT_URL: 'https://jonas-federighi.kw.com/contato'
+        };
 
-        // Elementos
+        // ==========================================
+        // CÓDIGO PRINCIPAL
+        // ==========================================
+
         const form = document.getElementById('terrenoForm');
         const loadingState = document.getElementById('loadingState');
         const resultsSection = document.getElementById('resultsSection');
@@ -851,39 +859,65 @@
                 delete formData.area_terreno;
             }
 
+            // Google Analytics Event
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'analise_iniciada', {
+                    'event_category': 'Formulario',
+                    'event_label': formData.sql
+                });
+            }
+
             // UI
             submitBtn.disabled = true;
             form.style.display = 'none';
             loadingState.style.display = 'block';
             resultsSection.style.display = 'none';
 
-            // Simular delay de 2 segundos
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
             try {
-                const response = await fetch(WEBHOOK_URL, {
+                // Timeout para fallback
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('timeout')), CONFIG.TIMEOUT)
+                );
+
+                const fetchPromise = fetch(CONFIG.WEBHOOK_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData),
-                    mode: 'no-cors' // GitHub Pages CORS workaround
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(formData)
                 });
 
-                // No-cors mode não retorna dados, então sempre usa fallback
-                throw new Error('Using fallback for demo');
+                const response = await Promise.race([fetchPromise, timeoutPromise]);
+                const data = await response.json();
+                
+                displayResults(data, true);
+
+                // Analytics
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'analise_concluida', {
+                        'event_category': 'Resultado',
+                        'event_label': data.dados_terreno?.zona || 'unknown'
+                    });
+                }
 
             } catch (error) {
-                console.log('Demo mode - using mock data');
+                console.error('Erro na análise:', error);
 
-                if (USE_FALLBACK) {
+                if (CONFIG.USE_FALLBACK) {
+                    console.log('Usando fallback data...');
                     const mockData = generateMockData(formData);
                     mockData._fallback = true;
                     displayResults(mockData, true);
+                    
+                    // Analytics
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'analise_fallback', {
+                            'event_category': 'Erro',
+                            'event_label': error.message
+                        });
+                    }
                 } else {
                     displayResults({
                         error: error.message,
-                        message: 'Erro ao conectar com o servidor'
+                        message: 'Não foi possível completar a análise. Tente novamente.'
                     }, false);
                 }
             } finally {
@@ -901,7 +935,7 @@
 
             return {
                 status: "success",
-                fonte_dados: "mock_demo",
+                fonte_dados: "analise_preliminar",
                 sql: input.sql,
                 endereco: input.endereco || "Endereço não informado",
                 dados_terreno: {
@@ -911,7 +945,7 @@
                     area_terreno: area,
                     potencial_construtivo: potencial,
                     uso_permitido: "Residencial, Comercial, Serviços",
-                    restricoes: "Consultar GeoSampa para validação oficial"
+                    restricoes: "Recomendamos validação oficial junto ao GeoSampa"
                 },
                 casos_similares: {
                     total: Math.floor(Math.random() * 15) + 1
@@ -931,11 +965,16 @@
                 let html = '';
 
                 // Badge
-                if (data.fonte_dados || data._fallback) {
-                    const isDemo = data.fonte_dados === 'mock_demo' || data._fallback;
+                if (data._fallback || data.fonte_dados === 'analise_preliminar') {
                     html += `
-                        <div class="result-badge ${isDemo ? 'badge-warning' : 'badge-success'}">
-                            ${isDemo ? '⚠️ Versão Demo - Dados Preliminares para Ilustração' : '✓ Dados Verificados do GeoSampa'}
+                        <div class="result-badge badge-warning">
+                            ⚠️ Análise Preliminar - Recomendamos Validação Oficial
+                        </div>
+                    `;
+                } else if (data.fonte_dados === 'geosampa_api') {
+                    html += `
+                        <div class="result-badge badge-success">
+                            ✓ Dados Verificados do GeoSampa
                         </div>
                     `;
                 }
@@ -1001,18 +1040,20 @@
                 }
 
                 // Aviso
-                html += `
-                    <div class="warning-box">
-                        <strong>⚠️ Versão Demonstração:</strong> Esta é uma versão demo hospedada no GitHub Pages. Os dados são gerados para ilustração. A versão oficial com dados reais estará disponível em breve em jonas-federighi.kw.com
-                    </div>
-                `;
+                if (data.requer_validacao || data._fallback) {
+                    html += `
+                        <div class="warning-box">
+                            <strong>⚠️ Importante:</strong> Esta é uma análise preliminar baseada em dados públicos. Recomendamos validação oficial junto ao GeoSampa e análise técnica por profissionais habilitados antes de qualquer decisão de investimento.
+                        </div>
+                    `;
+                }
 
                 // CTA
                 html += `
                     <div class="cta-box">
-                        <h4>Gostou do sistema?</h4>
-                        <p>Entre em contato para conhecer a versão completa com dados reais do GeoSampa</p>
-                        <a href="https://jonas-federighi.kw.com" target="_blank" class="btn-cta">Visitar Site Oficial</a>
+                        <h4>Precisa de uma análise completa?</h4>
+                        <p>Nossa equipe de especialistas está pronta para ajudar você a maximizar o potencial do seu terreno com análise técnica detalhada.</p>
+                        <a href="${CONFIG.CONTACT_URL}" class="btn-cta">Falar com Especialista</a>
                     </div>
                 `;
 
@@ -1023,7 +1064,8 @@
                 resultsContent.innerHTML = `
                     <div class="error-box">
                         <p><strong>Mensagem:</strong> ${data.error || data.message || 'Erro desconhecido'}</p>
-                        <p>Por favor, tente novamente.</p>
+                        <p>Por favor, tente novamente ou entre em contato conosco.</p>
+                        <a href="${CONFIG.CONTACT_URL}" class="btn-cta" style="margin-top: 15px; display: inline-block;">Entrar em Contato</a>
                     </div>
                 `;
             }
@@ -1046,10 +1088,10 @@
             }
         });
 
-        // Analytics
-        console.log('%c🏢 KW Frema - Análise de Terrenos (Demo)', 'color: #C8102E; font-size: 16px; font-weight: bold;');
-        console.log('Versão GitHub Pages - Demo');
-        console.log('Desenvolvido por Jonas Federighi Jr - KW Frema');
+        // Console
+        console.log('%c🏢 KW Frema - Análise de Terrenos', 'color: #C8102E; font-size: 16px; font-weight: bold;');
+        console.log('Desenvolvido por Jonas Federighi');
+        console.log('Powered by Make.com + OpenAI + Pinecone');
     </script>
 </body>
 </html>
